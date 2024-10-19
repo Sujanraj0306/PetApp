@@ -23,7 +23,7 @@ public class AdminAdoptionPage extends JFrame {
     // SQL Queries
     private static final String SELECT_ADOPTION_REQUESTS = "SELECT * FROM adoption_requests";
     private static final String UPDATE_ADOPTION_STATUS = "UPDATE adoption_requests SET request_status = ? WHERE request_id = ?";
-    private static final String MARK_PET_ADOPTED = "UPDATE pets SET is_adopted = TRUE WHERE pet_name = ?";
+    private static final String MARK_PET_ADOPTED = "UPDATE adoption_requests SET is_adopted = TRUE WHERE pet_name = ?";
     private static final String REJECT_OTHER_REQUESTS = "UPDATE adoption_requests SET request_status = 'Rejected' WHERE pet_name = ? AND request_id != ? AND request_status = 'Pending'";
     private static final String DELETE_ADOPTION_REQUEST = "DELETE FROM adoption_requests WHERE request_id = ?";
     private static final String DELETE_ALL_ADOPTION_REQUESTS = "DELETE FROM adoption_requests";
@@ -156,8 +156,10 @@ public class AdminAdoptionPage extends JFrame {
             conn.commit();
             JOptionPane.showMessageDialog(this, "Adoption status updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException e) {
-            showError("Failed to update adoption status.");
+            e.printStackTrace(); // This will print the full stack trace to help identify the issue
+            showError("Failed to update adoption status: " + e.getMessage());
         }
+        
     }
 
     private void markPetAsAdopted(Connection conn, String petName) throws SQLException {
